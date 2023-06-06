@@ -1,1 +1,33 @@
+/* <style> */
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&family=Plus+Jakarta+Sans:wght@200&family=Rye&display=swap');
+/* </style> */
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .bottom-inner-shadow::after {
+      content: "";
+      position: absolute;
+      /* bottom: 0; */
+      /* left: 0; */
+      /* right: 0; */
+      height: 10px;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+    }
+  }
+
+  .modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99
+  }
+  

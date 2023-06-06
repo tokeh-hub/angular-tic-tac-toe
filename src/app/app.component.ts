@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PlayerchoiceService } from './playerchoice.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-tic-tac-toe';
+  constructor(public choice:PlayerchoiceService) { }
 }
