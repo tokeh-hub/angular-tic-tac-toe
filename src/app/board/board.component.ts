@@ -1,66 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlayerchoiceService } from '../playerchoice.service';
 import { TileService } from '../tile.service';
-import { Subject } from 'rxjs';
+import { Subject, interval } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   private turnChangeSubject = new Subject<string>();
   turnChange$ = this.turnChangeSubject.asObservable();
-  disable = false  
-  constructor(public choice:PlayerchoiceService,public tileService: TileService) { }
+  disable = false;
+  private destroy$ = new Subject<void>(); // Used to unsubscribe from subscriptions
+
+  constructor(public choice: PlayerchoiceService, public tileService: TileService) { }
 
   ngOnInit(): void {
-    if(this.choice.opponent === "Player"){
-      this.tileService.getTiles().subscribe((tiles)=>{
-        console.log('tiles',tiles)
-        this.choice.tiles = tiles
-      })
+    if (this.choice.opponent === "Player") {
+      this.fetchTilesAndUpdate();
     }
-    if(this.choice.letter === 'o'){
-          if(this.choice.opponent === "CPU"){
-            this.choice.computerPlay()
-          }
-          else return
+    if (this.choice.letter === 'o') {
+      if (this.choice.opponent === "CPU") {
+        this.choice.computerPlay();
+      } else {
+        return;
+      }
     }
   }
 
-  handleClick(index:any){
-         if(this.choice.opponent === "CPU"){
-          this.playWithComputer(index)
-         }
-         else(this.playWithPlayer(index))
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-
-  playWithPlayer(index:any){
-      var tile = this.choice.tiles[index]
-      if(this.choice.turn === 'x'){
-        tile.content = '../../assets/greenx.png'
-        tile.clicked = true
-        this.tileService.updateTiles(tile).subscribe()
-        this.choice.turn = 'o'
-      }
-      else if(this.choice.turn === 'o'){
-        tile.content = '../../assets/Oval.png'
-        tile.clicked = true
-        this.tileService.updateTiles(tile).subscribe()
-        this.choice.turn = 'x'
-      }
-      else return;
-
-      this.turnChangeSubject.next(this.choice.turn);
-
-      this.choice.checkWin()
-      if (this.choice.winner === '') {
-        this.choice.checkTie();
-      }
-      
+  handleClick(index: any) {
+    if (this.choice.opponent === "CPU") {
+      this.playWithComputer(index);
+    } else {
+      this.playWithPlayer(index);
+    }
   }
 
+  playWithPlayer(index: any) {
+    var tile = this.choice.tiles[index];
+    if (this.choice.turn === 'x') {
+      tile.content = '../../assets/greenx.png';
+      tile.clicked = true;
+      this.tileService.updateTiles(tile).subscribe(() => {
+        this.fetchTilesAndUpdate();
+      });
+      this.choice.turn = 'o';
+    } else if (this.choice.turn === 'o') {
+      tile.content = '../../assets/Oval.png';
+      tile.clicked = true;
+      this.tileService.updateTiles(tile).subscribe(() => {
+        this.fetchTilesAndUpdate();
+      });
+      this.choice.turn = 'x';
+    } else {
+      return;
+    }
+
+    this.turnChangeSubject.next(this.choice.turn);
+
+    this.choice.checkWin();
+    if (this.choice.winner === '') {
+      this.choice.checkTie();
+    }
+  }
  
   playWithComputer(index:any){
      this.choice.tiles.forEach((tile)=>{
@@ -89,6 +98,15 @@ export class BoardComponent implements OnInit {
     }
     else return;
     
+  }
+
+  fetchTilesAndUpdate() {
+    this.tileService.getTiles().pipe(
+      takeUntil(this.destroy$) // Unsubscribe when component is destroyed
+    ).subscribe((tiles) => {
+      console.log('tiles', tiles);
+      this.choice.tiles = tiles;
+    });
   }
 
   onHover(index:any){
