@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerchoiceService } from '../playerchoice.service';
 import { TileService } from '../tile.service';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
+  private turnChangeSubject = new Subject<string>();
+  turnChange$ = this.turnChangeSubject.asObservable();
   disable = false  
   constructor(public choice:PlayerchoiceService,public tileService: TileService) { }
 
@@ -48,6 +51,8 @@ export class BoardComponent implements OnInit {
         this.choice.turn = 'x'
       }
       else return;
+
+      this.turnChangeSubject.next(this.choice.turn);
 
       this.choice.checkWin()
       if (this.choice.winner === '') {
