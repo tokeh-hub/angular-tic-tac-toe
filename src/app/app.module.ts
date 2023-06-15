@@ -9,6 +9,9 @@ import { PlayersComponent } from './players/players.component';
 import { WinModalComponent } from './win-modal/win-modal.component';
 import { RestartModalComponent } from './restart-modal/restart-modal.component';
 import { TieModalComponent } from './tie-modal/tie-modal.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -18,12 +21,14 @@ import { TieModalComponent } from './tie-modal/tie-modal.component';
     PlayersComponent,
     WinModalComponent,
     RestartModalComponent,
-    TieModalComponent
+    TieModalComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ToastrModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

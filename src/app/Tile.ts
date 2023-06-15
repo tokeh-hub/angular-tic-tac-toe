@@ -3,4 +3,5 @@ export interface Tile {
     id: number;
     content: string;
     clicked: boolean;
+    turn: string
 }

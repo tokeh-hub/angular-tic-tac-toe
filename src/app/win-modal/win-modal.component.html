@@ -1,9 +1,9 @@
 <div class="modal">
-    <div class="bg-grey-light h-40 w-full flex flex-col justify-center items-center gap-8 h-fit py-8">
+    <div class="bg-grey-light w-full flex flex-col justify-center items-center gap-4 sm:gap-8 h-fit py-8">
          <p class="font-bold uppercase text-slate-300">{{choice.modalHead}}</p>
-         <span class="flex justify-center items-center gap-5">
+         <span class="flex justify-center items-center gap-5 pb-3 sm:pb-0">
             <img [src]="choice.winner === 'x' ? '../../assets/greenx.png' : '../../assets/Oval.png'"/>
-            <p [ngClass]="[choice.winner === 'o' ? 'text-yellow-dark' : 'text-green-dark', 'text-4xl font-bold uppercase']">Takes the round</p>
+            <p [ngClass]="[choice.winner === 'o' ? 'text-yellow-dark' : 'text-green-dark', 'text-xl sm:text-4xl font-bold uppercase']">Takes the round</p>
          </span>
          <span class="flex justify-center items-center h-full w-full gap-5">
             <button (click)="quit()" class="uppercase font-bold text-normal rounded-xl shadow-bottom-white text-grey-dark bg-slate-dark hover:bg-white w-fit h-fit py-3 px-3">Quit</button>

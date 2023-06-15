@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerchoiceService } from '../playerchoice.service';
-import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-choose-letter',
@@ -8,34 +7,38 @@ import {Router} from '@angular/router'
   styleUrls: ['./choose-letter.component.css']
 })
 export class ChooseLetterComponent implements OnInit {
-  letter = ''
-  constructor(public choice:PlayerchoiceService, private router:Router) { }
+  letter = '';
+
+  constructor(public choice: PlayerchoiceService) { }
 
   ngOnInit(): void {
+
   }
 
-  chooseLetter(letter:string){
-    if(letter === 'x'){
-      this.choice.letter = 'x' 
-      // this.letter = 'x'
+  // Function to choose a letter (x or o)
+  chooseLetter(letter: string) {
+    this.choice.letterError = '';
+
+    if (letter === 'x') {
+      this.choice.letter = 'x';
+    } else {
+      this.choice.letter = 'o';
     }
-    else{
-      this.choice.letter = 'o'
+  }
+
+  // Function to update player choices (letter and opponent)
+  updatePlayers(choice: string) {
+    if (this.choice.letter === '') {
+      this.choice.letterError = 'Please choose a letter';
+    } else {
+      if (choice === 'CPU') {
+        this.choice.opponent = 'CPU';
+      } else {
+        this.choice.opponent = 'Player';
+      }
+
+      this.choice.showBoard = true;
+      this.choice.showHome = false;
     }
   }
-
-  updatePlayers(choice:string){
-      if(choice === 'CPU'){
-        this.choice.opponent = 'CPU' 
-      }
-      else{
-        this.choice.opponent = 'Player'
-      }
-      this.choice.showBoard = true
-      this.choice.showHome = false
-  }
-
-  
-
-
 }
